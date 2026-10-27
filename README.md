@@ -44,7 +44,7 @@ We are porting the complete set of 12 industrial widgets:
 
 | Category | Component | Description | Status |
 | :--- | :--- | :--- | :--- |
-| **Displays & Readouts** | `SevenSegmentDisplay` | Multi-digit vector LED/LCD display with decimal points and ghost segments. | ⏳ Planned |
+| **Displays & Readouts** | `SevenSegmentDisplay` | Multi-digit vector LED/LCD display with decimal points and ghost segments. | 🧪 Experimental (Preview) |
 | | `LedIndicator` | Configurable multi-state status LEDs with realistic lens diffusion. | 🧪 Experimental (Preview) |
 | | `LevelMeter` | Stereo dB meter with peak-hold for telemetry and audio signals. | ⏳ Planned |
 | **Gauges & Dials** | `RadialGauge` | Circular & semicircular dials (RPM, pressure, speed) with warning zones. | 🧪 Experimental (Preview) |

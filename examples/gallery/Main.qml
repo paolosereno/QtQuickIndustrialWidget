@@ -146,6 +146,10 @@ ApplicationWindow {
                 text: "🎚️  Industrial Knobs"
                 width: implicitWidth + 24
             }
+            TabButton {
+                text: "🔢  7-Segment Displays"
+                width: implicitWidth + 24
+            }
         }
 
         // ====================================================================
@@ -746,6 +750,158 @@ ApplicationWindow {
                                 font.bold: true
                                 color: "#f5f6fa"
                                 Layout.alignment: Qt.AlignHCenter
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 4: SevenSegmentDisplay Dedicated Showcase
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                Rectangle {
+                    width: parent.width
+                    implicitHeight: segCol.implicitHeight + 60
+                    color: "#161b24"
+                    radius: 8
+                    border.color: "#273142"
+                    border.width: 1
+
+                    ColumnLayout {
+                        id: segCol
+                        anchors.fill: parent
+                        anchors.margins: 30
+                        spacing: 24
+
+                        Text {
+                            text: "SevenSegmentDisplay Vector Readouts & Color Presets"
+                            font.pixelSize: 16
+                            font.bold: true
+                            color: "#f5f6fa"
+                        }
+
+                        // Row 1: Interactive & Main Presets
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 30
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Neon Cyan (Telemetry Engine RPM: 0-8000)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 5
+                                    decimalPlaces: 0
+                                    value: rpmGauge.value
+                                    activeSegmentColor: "#00e5ff"
+                                    showLeadingZeros: false
+                                }
+                            }
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Amber Preset (Hydraulic Pressure: 0-100 bar)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 5
+                                    decimalPlaces: 2
+                                    value: pressureGauge.value
+                                    colorPreset: "amber"
+                                    showLeadingZeros: true
+                                }
+                            }
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Alarm Red Preset (High Temp: 0-120 °C)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 5
+                                    decimalPlaces: 1
+                                    value: tempGauge.value
+                                    colorPreset: "red"
+                                }
+                            }
+                        }
+
+                        // Row 2: Status & Alphanumeric Text Mode
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 30
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Green Preset (System Ready / Counter)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 6
+                                    decimalPlaces: 0
+                                    value: 12480
+                                    colorPreset: "green"
+                                    showLeadingZeros: true
+                                }
+                            }
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Alphanumeric Text Mode ('PASS')"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 5
+                                    text: " PASS"
+                                    colorPreset: "green"
+                                }
+                            }
+
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Diagnostic Error Mode ('Err')"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                SevenSegmentDisplay {
+                                    width: 260
+                                    height: 75
+                                    digitCount: 5
+                                    text: " Err "
+                                    colorPreset: "red"
+                                }
                             }
                         }
                     }
