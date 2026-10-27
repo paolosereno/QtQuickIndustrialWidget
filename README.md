@@ -9,6 +9,7 @@ SPDX-License-Identifier: MIT
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Qt Version](https://img.shields.io/badge/Qt-6.x%20(Qt%20Quick)-41CD52.svg?logo=qt)](https://www.qt.io/)
 [![Status: Pre-Alpha](https://img.shields.io/badge/Status-Initial%20Development%20(Unstable)-yellow.svg)](#status)
+[![REUSE status](https://api.reuse.software/badge/github.com/paolosereno/QtQuickIndustrialWidget)](https://api.reuse.software/info/github.com/paolosereno/QtQuickIndustrialWidget)
 
 A modern, high-performance **Qt Quick / QML** instrumentation and SCADA widget suite designed for embedded Linux, touchscreens, test benches, automotive clusters, and industrial HMIs.
 
@@ -38,24 +39,31 @@ While the original `QtIndustrialWidgets` excels in traditional desktop `QtWidget
 
 ---
 
-## 🎛 Widget Suite Roadmap & Status
+## 🎛 Implemented Widgets
 
-We are porting the complete set of 12 industrial widgets:
+| Widget | Showcase |
+|---|---|
+| **`RadialGauge`**<br>0–8000 RPM dial, faceted vector needle in warning zone, digital LCD pod, threshold bands | <img src="docs/images/radial-gauge-warning.png" alt="RadialGauge" width="300"> |
+| **`LinearGauge`**<br>Thermometer mode, 0–120 °C with bulb capillary, dynamic liquid color shift and specular glare | <img src="docs/images/linear-gauge-thermometer.png" alt="LinearGauge" width="120"> |
+| **`SevenSegmentDisplay`**<br>Six digits, one decimal, italic skewed segments, unlit ghost segments and color presets | <img src="docs/images/seven-segment-display-value.png" alt="SevenSegmentDisplay" width="300"> |
+| **`LedIndicator`**<br>3D spherical lens diffusion, ambient halo glow, machined bezel, blinking timer | <img src="docs/images/led-indicator-on.png" alt="LedIndicator" width="140"> |
+| **`IndustrialKnob`**<br>Continuous 0–8000 RPM knob with CNC knurled serrations, illuminated arc and digital pod | <img src="docs/images/industrial-knob-continuous.png" alt="IndustrialKnob" width="220"> |
 
-| Category | Component | Description | Status |
-| :--- | :--- | :--- | :--- |
-| **Displays & Readouts** | `SevenSegmentDisplay` | Multi-digit vector LED/LCD display with decimal points and ghost segments. | 🧪 Experimental (Preview) |
-| | `LedIndicator` | Configurable multi-state status LEDs with realistic lens diffusion. | 🧪 Experimental (Preview) |
-| | `LevelMeter` | Stereo dB meter with peak-hold for telemetry and audio signals. | ⏳ Planned |
-| **Gauges & Dials** | `RadialGauge` | Circular & semicircular dials (RPM, pressure, speed) with warning zones. | 🧪 Experimental (Preview) |
-| | `LinearGauge` | Vertical/horizontal column and thermometer bar displays. | 🧪 Experimental (Preview) |
-| | `CircularBargraph` | Segmented arc bargraph with peak memory. | ⏳ Planned |
-| | `Compass` | Heading indicator card with heading bug alignment. | ⏳ Planned |
-| **Controls** | `IndustrialKnob` | Smooth/stepped rotary knob with realistic knurling and gesture support. | 🧪 Experimental (Preview) |
-| | `IndustrialSwitch` | Toggle switches, rockers, and safety-guarded toggle covers. | ⏳ Planned |
-| **Alarms & Charts** | `AnnunciatorPanel` | ISA-18.1 compliant alarm annunciator tiles (unack, ack, ringback). | ⏳ Planned |
-| | `StripChart` | High-frequency rolling telemetry stream plotting. | ⏳ Planned |
-| | `AnalysisChart` | Historical data review chart with zoom/pan capabilities. | ⏳ Planned |
+---
+
+## 🗺️ Roadmap & Remaining Widgets
+
+The remaining 7 industrial widgets from the original C++ suite are tracked in the [Project Roadmap](https://github.com/users/paolosereno/projects/4):
+
+| Category | Component | Description | Tracking Issue |
+| :--- | :--- | :--- | :---: |
+| **Displays & Readouts** | `LevelMeter` | Stereo dB meter with peak-hold for telemetry and audio signals | [Issue #2](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/2) |
+| **Gauges & Dials** | `CircularBargraph` | Segmented arc bargraph with peak memory | [Issue #4](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/4) |
+| | `Compass` | Heading indicator card with heading bug alignment and bearing scale | [Issue #5](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/5) |
+| **Controls** | `IndustrialSwitch` | Toggle switches, rockers, and safety-guarded flip covers | [Issue #6](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/6) |
+| **Alarms & Charts** | `AnnunciatorPanel` | ISA-18.1 compliant alarm annunciator tiles (unack, ack, ringback) | [Issue #7](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/7) |
+| | `StripChart` | High-frequency rolling telemetry stream plotting (60 FPS) | [Issue #8](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/8) |
+| | `AnalysisChart` | Historical data review chart with zoom/pan capabilities and dual cursors | [Issue #9](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/9) |
 
 ---
 
@@ -69,7 +77,7 @@ import QtQuick.Controls
 import QtQuickIndustrialWidgets
 
 Item {
-    width: 640
+    width: 800
     height: 480
 
     Row {
@@ -93,13 +101,32 @@ Item {
             errorThreshold: 90
         }
 
+        LinearGauge {
+            width: 110
+            height: 260
+            thermometerMode: true
+            value: 42.5
+            minimum: -20
+            maximum: 100
+            unit: "°C"
+        }
+
         IndustrialKnob {
-            width: 200
+            width: 180
             height: 220
             value: 40.0
             minimum: 0
             maximum: 100
             unit: "%"
+        }
+
+        SevenSegmentDisplay {
+            width: 220
+            height: 70
+            digitCount: 5
+            decimalPlaces: 1
+            value: 124.8
+            colorPreset: "amber"
         }
     }
 }
