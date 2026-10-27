@@ -12,6 +12,7 @@ qt_add_qml_module(QtQuickIndustrialWidgets
         QtQuickIndustrialWidgets/RadialGauge.qml
         QtQuickIndustrialWidgets/IndustrialKnob.qml
         QtQuickIndustrialWidgets/SevenSegmentDisplay.qml
+        QtQuickIndustrialWidgets/LinearGauge.qml
         QtQuickIndustrialWidgets/NumberFormat.js
 )
 

@@ -48,7 +48,7 @@ We are porting the complete set of 12 industrial widgets:
 | | `LedIndicator` | Configurable multi-state status LEDs with realistic lens diffusion. | 🧪 Experimental (Preview) |
 | | `LevelMeter` | Stereo dB meter with peak-hold for telemetry and audio signals. | ⏳ Planned |
 | **Gauges & Dials** | `RadialGauge` | Circular & semicircular dials (RPM, pressure, speed) with warning zones. | 🧪 Experimental (Preview) |
-| | `LinearGauge` | Vertical/horizontal column and thermometer bar displays. | ⏳ Planned |
+| | `LinearGauge` | Vertical/horizontal column and thermometer bar displays. | 🧪 Experimental (Preview) |
 | | `CircularBargraph` | Segmented arc bargraph with peak memory. | ⏳ Planned |
 | | `Compass` | Heading indicator card with heading bug alignment. | ⏳ Planned |
 | **Controls** | `IndustrialKnob` | Smooth/stepped rotary knob with realistic knurling and gesture support. | 🧪 Experimental (Preview) |

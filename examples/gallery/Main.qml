@@ -150,6 +150,10 @@ ApplicationWindow {
                 text: "🔢  7-Segment Displays"
                 width: implicitWidth + 24
             }
+            TabButton {
+                text: "🌡️  Linear Gauges"
+                width: implicitWidth + 24
+            }
         }
 
         // ====================================================================
@@ -901,6 +905,206 @@ ApplicationWindow {
                                     digitCount: 5
                                     text: " Err "
                                     colorPreset: "red"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 5: LinearGauge Dedicated Showcase
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                Rectangle {
+                    width: parent.width
+                    implicitHeight: linCol.implicitHeight + 60
+                    color: "#161b24"
+                    radius: 8
+                    border.color: "#273142"
+                    border.width: 1
+
+                    ColumnLayout {
+                        id: linCol
+                        anchors.fill: parent
+                        anchors.margins: 30
+                        spacing: 24
+
+                        Text {
+                            text: "LinearGauge Vertical Thermometers & Horizontal Bar Displays"
+                            font.pixelSize: 16
+                            font.bold: true
+                            color: "#f5f6fa"
+                        }
+
+                        // Section A: Vertical Gauges Row
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 40
+
+                            // 1. Bulb Thermometer (Live Core Temperature)
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Bulb Thermometer (Core Temp °C)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                LinearGauge {
+                                    width: 120
+                                    height: 300
+                                    value: tempGauge.value
+                                    minimum: -20
+                                    maximum: 120
+                                    precision: 1
+                                    unit: "°C"
+                                    thermometerMode: true
+                                    warningThreshold: 80
+                                    errorThreshold: 100
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+
+                            // 2. Flat Column Bar (Hydraulic Pressure)
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Flat Column Bar (Pressure bar)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                LinearGauge {
+                                    width: 120
+                                    height: 300
+                                    value: pressureGauge.value
+                                    minimum: 0
+                                    maximum: 100
+                                    precision: 1
+                                    unit: "bar"
+                                    thermometerMode: false
+                                    warningThreshold: 70
+                                    errorThreshold: 85
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+
+                            // 3. Interactive Vertical Slider (Interactive Mouse / Wheel)
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Interactive Level (Drag / Wheel)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                LinearGauge {
+                                    id: interactiveVertGauge
+                                    width: 120
+                                    height: 300
+                                    value: 45.0
+                                    minimum: 0
+                                    maximum: 100
+                                    precision: 1
+                                    unit: "%"
+                                    thermometerMode: true
+                                    warningThreshold: 60
+                                    errorThreshold: 85
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+
+                            // 4. Multi-color Continuous Gradient Liquid
+                            ColumnLayout {
+                                spacing: 8
+                                Text {
+                                    text: "Continuous Gradient Fill Mode"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                LinearGauge {
+                                    width: 120
+                                    height: 300
+                                    value: interactiveVertGauge.value
+                                    minimum: 0
+                                    maximum: 100
+                                    precision: 1
+                                    unit: "%"
+                                    thermometerMode: true
+                                    gradientLiquid: true
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Section B: Horizontal Gauges
+                        Text {
+                            text: "Horizontal Orientation Layouts"
+                            font.pixelSize: 14
+                            font.bold: true
+                            color: "#8a95a5"
+                            Layout.topMargin: 12
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 16
+
+                            // Horizontal 1: Power Output Bar
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 4
+                                Text {
+                                    text: "Horizontal Linear Bar Gauge (Power Output: 0-100 kW)"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                LinearGauge {
+                                    Layout.fillWidth: true
+                                    height: 85
+                                    orientation: LinearGauge.Orientation.Horizontal
+                                    thermometerMode: false
+                                    value: (rpmGauge.value / 8000.0) * 100.0
+                                    minimum: 0
+                                    maximum: 100
+                                    precision: 1
+                                    unit: "kW"
+                                    warningThreshold: 75
+                                    errorThreshold: 90
+                                }
+                            }
+
+                            // Horizontal 2: Continuous Gradient Horizontal
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 4
+                                Text {
+                                    text: "Horizontal Thermometer with Multi-Color Gradient Fill"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#8a95a5"
+                                }
+                                LinearGauge {
+                                    Layout.fillWidth: true
+                                    height: 85
+                                    orientation: LinearGauge.Orientation.Horizontal
+                                    thermometerMode: true
+                                    gradientLiquid: true
+                                    value: interactiveVertGauge.value
+                                    minimum: 0
+                                    maximum: 100
+                                    precision: 1
+                                    unit: "%"
                                 }
                             }
                         }
