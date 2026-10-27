@@ -1,0 +1,4 @@
+module QtQuickIndustrialWidgets
+LedIndicator 1.0 LedIndicator.qml
+RadialGauge 1.0 RadialGauge.qml
+IndustrialKnob 1.0 IndustrialKnob.qml
