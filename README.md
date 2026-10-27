@@ -14,6 +14,10 @@ A modern, high-performance **Qt Quick / QML** instrumentation and SCADA widget s
 
 This project is the native Qt Quick evolution of the [**QtIndustrialWidgets**](https://github.com/paolosereno/QtIndustrialWidgets) (`QtWidgets`) C++ library.
 
+<p align="center">
+  <img src="docs/images/gallery-overview.png" alt="QtQuickIndustrialWidgets Gallery Overview" width="92%" />
+</p>
+
 ---
 
 > [!WARNING]
