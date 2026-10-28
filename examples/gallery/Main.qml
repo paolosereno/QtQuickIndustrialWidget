@@ -154,6 +154,10 @@ ApplicationWindow {
                 text: "🌡️  Linear Gauges"
                 width: implicitWidth + 24
             }
+            TabButton {
+                text: "🔌  Industrial Switches"
+                width: implicitWidth + 24
+            }
         }
 
         // ====================================================================
@@ -1105,6 +1109,355 @@ ApplicationWindow {
                                     maximum: 100
                                     precision: 1
                                     unit: "%"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 6: Industrial Switches Dedicated Showcase
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                ColumnLayout {
+                    width: parent.width
+                    spacing: 20
+
+                    // Header Description
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 70
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 16
+
+                            Text {
+                                text: "🔌 Industrial Panel Switches Showcase"
+                                font.pixelSize: 16
+                                font.bold: true
+                                color: "#f5f6fa"
+                            }
+                            Text {
+                                text: "Bat-handle toggle levers, curved rocker paddles, 2/3 positions, and flip-up safety guards"
+                                font.pixelSize: 12
+                                color: "#8a95a5"
+                                Layout.fillWidth: true
+                            }
+                        }
+                    }
+
+                    // Main Switches Row
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 16
+
+                        // Panel 1: Guarded Toggle Lever (Crimson Flip-Up Safety Guard)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 330
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 12
+
+                                Text {
+                                    text: "Safety Guarded Toggle Lever"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Click guard to flip open, then actuate lever"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                IndustrialSwitch {
+                                    id: guardedSwitch
+                                    width: 110
+                                    height: 180
+                                    Layout.alignment: Qt.AlignCenter
+                                    switchType: IndustrialSwitch.SwitchType.ToggleLever
+                                    hasSafetyGuard: true
+                                    label: "MAIN PWR"
+                                    labelOff: "OFF"
+                                    labelOn: "ARMED"
+                                    hasLed: true
+                                    ledColor: "#eb3b5a"
+                                }
+
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    spacing: 8
+                                    Button {
+                                        text: guardedSwitch.isGuardOpen ? "Close Guard" : "Open Guard"
+                                        onClicked: guardedSwitch.setGuardOpen(!guardedSwitch.isGuardOpen)
+                                    }
+                                    Button {
+                                        text: guardedSwitch.checked ? "Turn OFF" : "Turn ON"
+                                        onClicked: guardedSwitch.toggle()
+                                    }
+                                }
+                            }
+                        }
+
+                        // Panel 2: 3-Position Multi-Detent Switch
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 330
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 12
+
+                                Text {
+                                    text: "3-Position Multi-Detent Selector"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Detents: MAN (0) / OFF (1) / AUTO (2)"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                IndustrialSwitch {
+                                    id: threePosSwitch
+                                    width: 110
+                                    height: 180
+                                    Layout.alignment: Qt.AlignCenter
+                                    switchType: IndustrialSwitch.SwitchType.ToggleLever
+                                    positionCount: 3
+                                    position: 2
+                                    label: "FEED PUMP"
+                                    labelOff: "MAN"
+                                    labelCenter: "OFF"
+                                    labelOn: "AUTO"
+                                    hasLed: true
+                                    ledColor: "#2ecc71"
+                                }
+
+                                Text {
+                                    text: "Position: " + threePosSwitch.position + " (" + (threePosSwitch.position === 0 ? "MAN" : threePosSwitch.position === 1 ? "OFF" : "AUTO") + ")"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: "#fed330"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 3: Industrial Rocker Switch
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 330
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 12
+
+                                Text {
+                                    text: "Curved Rocker Switch"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "3D tilt displacement with illuminated status bar"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                IndustrialSwitch {
+                                    id: rockerSwitch
+                                    width: 110
+                                    height: 180
+                                    Layout.alignment: Qt.AlignCenter
+                                    switchType: IndustrialSwitch.SwitchType.Rocker
+                                    label: "EXHAUST"
+                                    labelOff: "STOP"
+                                    labelOn: "RUN"
+                                    hasLed: true
+                                    ledColor: "#00e5ff"
+                                }
+
+                                Text {
+                                    text: "Status: " + (rockerSwitch.checked ? "RUNNING" : "STOPPED")
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: rockerSwitch.checked ? "#00e5ff" : "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 4: Horizontal Toggle Switch
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 330
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 12
+
+                                Text {
+                                    text: "Horizontal Orientation Switch"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Left-to-right throw with lateral detent action"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                IndustrialSwitch {
+                                    id: horizontalSwitch
+                                    width: 180
+                                    height: 110
+                                    Layout.alignment: Qt.AlignCenter
+                                    orientation: IndustrialSwitch.Orientation.Horizontal
+                                    switchType: IndustrialSwitch.SwitchType.ToggleLever
+                                    label: "INTERLOCK"
+                                    labelOff: "DISENG"
+                                    labelOn: "ENGAGED"
+                                    hasLed: true
+                                    ledColor: "#fed330"
+                                }
+
+                                Text {
+                                    text: "Interlock: " + (horizontalSwitch.checked ? "ENGAGED" : "DISENGAGED")
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: horizontalSwitch.checked ? "#fed330" : "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+                    }
+
+                    // Interactive Configurator Card
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 180
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            spacing: 32
+
+                            // Preview Switch
+                            IndustrialSwitch {
+                                id: configSwitch
+                                width: configHorizontalCheck.checked ? 170 : 105
+                                height: configHorizontalCheck.checked ? 105 : 150
+                                switchType: configTypeCombo.currentIndex === 0 ? IndustrialSwitch.SwitchType.ToggleLever : IndustrialSwitch.SwitchType.Rocker
+                                orientation: configHorizontalCheck.checked ? IndustrialSwitch.Orientation.Horizontal : IndustrialSwitch.Orientation.Vertical
+                                positionCount: configPos3Check.checked ? 3 : 2
+                                hasSafetyGuard: configGuardCheck.checked
+                                hasLed: configLedCheck.checked
+                                label: "CUSTOM"
+                                ledColor: configColorCombo.currentValue
+                            }
+
+                            // Controls Grid
+                            GridLayout {
+                                Layout.fillWidth: true
+                                columns: 3
+                                rowSpacing: 10
+                                columnSpacing: 24
+
+                                CheckBox {
+                                    id: configGuardCheck
+                                    text: "Safety Guard"
+                                    checked: true
+                                }
+
+                                CheckBox {
+                                    id: configPos3Check
+                                    text: "3-Position Mode"
+                                    checked: false
+                                }
+
+                                CheckBox {
+                                    id: configHorizontalCheck
+                                    text: "Horizontal Layout"
+                                    checked: false
+                                }
+
+                                CheckBox {
+                                    id: configLedCheck
+                                    text: "Pilot LED Lamp"
+                                    checked: true
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Actuator:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: configTypeCombo
+                                        model: ["Toggle Bat Lever", "Curved Rocker"]
+                                    }
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "LED Color:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: configColorCombo
+                                        textRole: "text"
+                                        valueRole: "value"
+                                        model: [
+                                            { text: "Emerald Green", value: "#2ecc71" },
+                                            { text: "Neon Cyan", value: "#00e5ff" },
+                                            { text: "Amber Gold", value: "#fed330" },
+                                            { text: "Crimson Red", value: "#eb3b5a" }
+                                        ]
+                                    }
                                 }
                             }
                         }

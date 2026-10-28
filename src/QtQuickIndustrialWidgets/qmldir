@@ -4,3 +4,4 @@ RadialGauge 1.0 RadialGauge.qml
 IndustrialKnob 1.0 IndustrialKnob.qml
 SevenSegmentDisplay 1.0 SevenSegmentDisplay.qml
 LinearGauge 1.0 LinearGauge.qml
+IndustrialSwitch 1.0 IndustrialSwitch.qml
