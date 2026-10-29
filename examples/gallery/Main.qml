@@ -30,6 +30,19 @@ ApplicationWindow {
             rpmGauge.value = 3200 + Math.sin(appWindow.simTime * 0.8) * 2800 + Math.sin(appWindow.simTime * 3.1) * 350
             pressureGauge.value = 55 + Math.sin(appWindow.simTime * 0.5) * 32 + Math.cos(appWindow.simTime * 1.7) * 8
             tempGauge.value = 72 + Math.sin(appWindow.simTime * 0.3) * 22
+
+            if (typeof stereoMeter !== "undefined" && stereoMeter) {
+                const audioL = -18.0 + Math.sin(appWindow.simTime * 2.5) * 12.0 + Math.cos(appWindow.simTime * 5.7) * 6.0
+                const audioR = -20.0 + Math.sin(appWindow.simTime * 2.3 + 0.5) * 14.0 + Math.cos(appWindow.simTime * 4.9) * 5.0
+                stereoMeter.setValue(0, audioL)
+                stereoMeter.setValue(1, audioR)
+            }
+            if (typeof tankMeter !== "undefined" && tankMeter) {
+                tankMeter.setValue(0, 65 + Math.sin(appWindow.simTime * 0.4) * 20)
+                tankMeter.setValue(1, 42 + Math.sin(appWindow.simTime * 0.3 + 1.0) * 15)
+                tankMeter.setValue(2, 88 + Math.cos(appWindow.simTime * 0.2) * 8)
+                tankMeter.setValue(3, 25 + Math.sin(appWindow.simTime * 0.6) * 18)
+            }
         }
     }
 
@@ -156,6 +169,10 @@ ApplicationWindow {
             }
             TabButton {
                 text: "🔌  Industrial Switches"
+                width: implicitWidth + 24
+            }
+            TabButton {
+                text: "📶  Level Meters"
                 width: implicitWidth + 24
             }
         }
@@ -1457,6 +1474,339 @@ ApplicationWindow {
                                             { text: "Amber Gold", value: "#fed330" },
                                             { text: "Crimson Red", value: "#eb3b5a" }
                                         ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 7: Level Meters Dedicated Showcase
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                ColumnLayout {
+                    width: parent.width
+                    spacing: 20
+
+                    // Header Description
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 70
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 16
+
+                            Text {
+                                text: "📶 Multi-Channel Level Meters (LevelMeter)"
+                                font.pixelSize: 16
+                                font.bold: true
+                                color: "#f5f6fa"
+                            }
+                            Text {
+                                text: "Stereo dB / VU meters, telemetry amplitude bars, floating peak hold, segmented LED ladder and continuous gradient modes"
+                                font.pixelSize: 12
+                                color: "#8a95a5"
+                                Layout.fillWidth: true
+                            }
+                        }
+                    }
+
+                    // Main Level Meters Row
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 16
+
+                        // Panel 1: Stereo Master VU Meter (dBFS)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Stereo Master VU Meter (-60 to +6 dB)"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Segmented LED ladder with floating peak-hold bars"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                LevelMeter {
+                                    id: stereoMeter
+                                    width: 130
+                                    height: 250
+                                    Layout.alignment: Qt.AlignCenter
+                                    channelCount: 2
+                                    channelLabels: ["L", "R"]
+                                    minimum: -60.0
+                                    maximum: 6.0
+                                    warningThreshold: -6.0
+                                    errorThreshold: 0.0
+                                    segmentCount: 24
+                                    unit: "dB"
+                                    title: "STEREO MASTER"
+                                    displayMode: LevelMeter.DisplayMode.Segmented
+                                    peakHoldEnabled: true
+                                }
+
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    spacing: 8
+                                    Button {
+                                        text: "Reset Peaks"
+                                        onClicked: stereoMeter.resetPeaks()
+                                    }
+                                    Button {
+                                        text: "Burst +3 dB"
+                                        onClicked: {
+                                            stereoMeter.setValue(0, 3.2)
+                                            stereoMeter.setValue(1, 2.5)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Panel 2: 4-Channel Telemetry Tank Levels (%)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "4-Channel Tank Fill Levels (0-100%)"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Solid continuous fill with dynamic color bands"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                LevelMeter {
+                                    id: tankMeter
+                                    width: 170
+                                    height: 250
+                                    Layout.alignment: Qt.AlignCenter
+                                    channelCount: 4
+                                    channelLabels: ["T1", "T2", "T3", "T4"]
+                                    minimum: 0.0
+                                    maximum: 100.0
+                                    warningThreshold: 75.0
+                                    errorThreshold: 90.0
+                                    unit: "%"
+                                    title: "TANK FILL"
+                                    displayMode: LevelMeter.DisplayMode.Continuous
+                                    peakHoldEnabled: true
+                                }
+
+                                Text {
+                                    text: "Channels: T1=65% • T2=42% • T3=88% • T4=25%"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 3: Horizontal Orientation Level Meter
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Horizontal Orientation Layout"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Dual horizontal bar meters with bottom scale"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                LevelMeter {
+                                    id: horizMeter
+                                    Layout.fillWidth: true
+                                    height: 120
+                                    orientation: LevelMeter.Orientation.Horizontal
+                                    channelCount: 2
+                                    channelLabels: ["CH 1", "CH 2"]
+                                    minimum: -60.0
+                                    maximum: 6.0
+                                    warningThreshold: -6.0
+                                    errorThreshold: 0.0
+                                    unit: "dB"
+                                    title: "AUXILIARY BUS"
+                                    displayMode: LevelMeter.DisplayMode.Segmented
+                                    values: [stereoMeter.getChannelValue(0), stereoMeter.getChannelValue(1)]
+                                }
+
+                                LevelMeter {
+                                    Layout.fillWidth: true
+                                    height: 110
+                                    orientation: LevelMeter.Orientation.Horizontal
+                                    channelCount: 1
+                                    channelLabels: ["MAIN"]
+                                    minimum: 0.0
+                                    maximum: 100.0
+                                    unit: "kW"
+                                    displayMode: LevelMeter.DisplayMode.Continuous
+                                    value: (rpmGauge.value / 8000.0) * 100.0
+                                }
+                            }
+                        }
+                    }
+
+                    // Interactive Configurator Card
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 220
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            spacing: 32
+
+                            // Preview Meter
+                            LevelMeter {
+                                id: configMeter
+                                width: configHorizCheck.checked ? 280 : (24 + channelCount * 18 + 40)
+                                height: configHorizCheck.checked ? (24 + channelCount * 18 + 36) : 180
+                                orientation: configHorizCheck.checked ? LevelMeter.Orientation.Horizontal : LevelMeter.Orientation.Vertical
+                                displayMode: configModeCombo.currentIndex === 0 ? LevelMeter.DisplayMode.Segmented : LevelMeter.DisplayMode.Continuous
+                                channelCount: Math.round(configChannelSlider.value)
+                                segmentCount: Math.round(configSegSlider.value)
+                                peakHoldEnabled: configPeakCheck.checked
+                                scaleVisible: configScaleCheck.checked
+                                minimum: -60
+                                maximum: 6
+                                unit: "dB"
+                                title: "CUSTOM"
+                                value: configValSlider.value
+                            }
+
+                            // Controls Grid
+                            GridLayout {
+                                Layout.fillWidth: true
+                                columns: 3
+                                rowSpacing: 10
+                                columnSpacing: 24
+
+                                CheckBox {
+                                    id: configPeakCheck
+                                    text: "Peak Hold"
+                                    checked: true
+                                }
+
+                                CheckBox {
+                                    id: configScaleCheck
+                                    text: "Scale Visible"
+                                    checked: true
+                                }
+
+                                CheckBox {
+                                    id: configHorizCheck
+                                    text: "Horizontal Layout"
+                                    checked: false
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Mode:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: configModeCombo
+                                        model: ["Segmented (LED)", "Continuous (Fill)"]
+                                    }
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Channels: " + Math.round(configChannelSlider.value); color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: configChannelSlider
+                                        from: 1
+                                        to: 6
+                                        value: 2
+                                        stepSize: 1
+                                    }
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Segments: " + Math.round(configSegSlider.value); color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: configSegSlider
+                                        from: 10
+                                        to: 40
+                                        value: 24
+                                        stepSize: 2
+                                    }
+                                }
+
+                                RowLayout {
+                                    Layout.columnSpan: 3
+                                    spacing: 12
+                                    Text { text: "Manual Signal Value: " + configValSlider.value.toFixed(1) + " dB"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: configValSlider
+                                        Layout.fillWidth: true
+                                        from: -60
+                                        to: 6
+                                        value: -12
+                                        onValueChanged: configMeter.setValue(0, value)
                                     }
                                 }
                             }
