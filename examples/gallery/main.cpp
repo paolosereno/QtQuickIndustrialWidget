@@ -16,23 +16,30 @@ int main(int argc, char *argv[])
     app.setOrganizationName("QtIndustrialWidgets");
 
     QString screenshotPath;
+    int targetTab = -1;
     for (int i = 1; i < argc; ++i) {
         if (QString::fromLocal8Bit(argv[i]) == "--screenshot" && i + 1 < argc) {
             screenshotPath = QString::fromLocal8Bit(argv[++i]);
+        } else if (QString::fromLocal8Bit(argv[i]) == "--tab" && i + 1 < argc) {
+            targetTab = QString::fromLocal8Bit(argv[++i]).toInt();
         }
     }
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/qt/qml/GalleryApp/Main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url, screenshotPath, &engine, &app](QObject *obj, const QUrl &objUrl) {
+                     &app, [url, screenshotPath, targetTab, &engine, &app](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl) {
             QCoreApplication::exit(-1);
             return;
         }
 
+        if (targetTab >= 0 && obj) {
+            obj->setProperty("initialTab", targetTab);
+        }
+
         if (!screenshotPath.isEmpty()) {
-            QTimer::singleShot(800, [screenshotPath, &engine, &app]() {
+            QTimer::singleShot(1000, [screenshotPath, &engine, &app]() {
                 if (engine.rootObjects().isEmpty()) {
                     app.exit(1);
                     return;

@@ -15,6 +15,7 @@ ApplicationWindow {
     visible: true
     title: "QtQuickIndustrialWidgets — Native Qt 6 SCADA Suite"
     color: "#0f1218"
+    property int initialTab: 0
 
     // --- Simulated Telemetry Generator ---
     property bool simulationRunning: true
@@ -136,7 +137,7 @@ ApplicationWindow {
         TabBar {
             id: mainTabBar
             Layout.fillWidth: true
-            currentIndex: 0
+            currentIndex: appWindow.initialTab
 
             background: Rectangle {
                 color: "#141822"
