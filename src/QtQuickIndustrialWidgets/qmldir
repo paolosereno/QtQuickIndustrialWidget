@@ -6,3 +6,4 @@ SevenSegmentDisplay 1.0 SevenSegmentDisplay.qml
 LinearGauge 1.0 LinearGauge.qml
 IndustrialSwitch 1.0 IndustrialSwitch.qml
 LevelMeter 1.0 LevelMeter.qml
+CircularBargraph 1.0 CircularBargraph.qml

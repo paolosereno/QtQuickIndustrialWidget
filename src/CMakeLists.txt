@@ -15,6 +15,7 @@ qt_add_qml_module(QtQuickIndustrialWidgets
         QtQuickIndustrialWidgets/LinearGauge.qml
         QtQuickIndustrialWidgets/IndustrialSwitch.qml
         QtQuickIndustrialWidgets/LevelMeter.qml
+        QtQuickIndustrialWidgets/CircularBargraph.qml
         QtQuickIndustrialWidgets/NumberFormat.js
 )
 

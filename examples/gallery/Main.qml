@@ -44,6 +44,12 @@ ApplicationWindow {
                 tankMeter.setValue(2, 88 + Math.cos(appWindow.simTime * 0.2) * 8)
                 tankMeter.setValue(3, 25 + Math.sin(appWindow.simTime * 0.6) * 18)
             }
+            if (typeof liveBargraph !== "undefined" && liveBargraph) {
+                liveBargraph.setValue(50 + Math.sin(appWindow.simTime * 1.1) * 38 + Math.cos(appWindow.simTime * 2.7) * 8)
+            }
+            if (typeof dotBargraph !== "undefined" && dotBargraph) {
+                dotBargraph.setValue(60 + Math.cos(appWindow.simTime * 0.9) * 35)
+            }
         }
     }
 
@@ -174,6 +180,10 @@ ApplicationWindow {
             }
             TabButton {
                 text: "📶  Level Meters"
+                width: implicitWidth + 24
+            }
+            TabButton {
+                text: "⭕  Circular Bargraphs"
                 width: implicitWidth + 24
             }
         }
@@ -1808,6 +1818,387 @@ ApplicationWindow {
                                         to: 6
                                         value: -12
                                         onValueChanged: configMeter.setValue(0, value)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 8: Circular Bargraphs Dedicated Showcase
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                ColumnLayout {
+                    width: parent.width
+                    spacing: 20
+
+                    // Header Description
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 70
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 16
+
+                            Text {
+                                text: "⭕ Circular LED Bargraphs (CircularBargraph)"
+                                font.pixelSize: 16
+                                font.bold: true
+                                color: "#f5f6fa"
+                            }
+                            Text {
+                                text: "Discrete curved LED segments, progressive Bar and single Dot cursor modes, multi-zone color thresholds, floating peak hold, and out-of-range blinking indicators"
+                                font.pixelSize: 12
+                                color: "#8a95a5"
+                                Layout.fillWidth: true
+                            }
+                        }
+                    }
+
+                    // Main Bargraphs Row
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 16
+
+                        // Panel 1: Live Telemetry 270° Bar Mode
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "270° Progressive LED Stack (Bar Mode)"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "24 curved segments, dynamic color zones & floating peak hold"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                CircularBargraph {
+                                    id: liveBargraph
+                                    width: 200
+                                    height: 200
+                                    Layout.alignment: Qt.AlignCenter
+                                    minimum: 0
+                                    maximum: 100
+                                    warningThreshold: 70
+                                    errorThreshold: 85
+                                    segmentCount: 24
+                                    unit: "%"
+                                    precision: 1
+                                    displayMode: CircularBargraph.DisplayMode.Bar
+                                    peakHoldEnabled: true
+                                }
+
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    spacing: 8
+                                    Button {
+                                        text: "Reset Peak"
+                                        onClicked: liveBargraph.resetPeak()
+                                    }
+                                    Button {
+                                        text: "Burst 92%"
+                                        onClicked: liveBargraph.setValue(92.0)
+                                    }
+                                }
+                            }
+                        }
+
+                        // Panel 2: Single Cursor Dot Mode
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "32-Segment Dot Cursor (Dot Mode)"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Single active pointer LED with ghost segment backdrop"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                CircularBargraph {
+                                    id: dotBargraph
+                                    width: 200
+                                    height: 200
+                                    Layout.alignment: Qt.AlignCenter
+                                    minimum: 0
+                                    maximum: 100
+                                    warningThreshold: 75
+                                    errorThreshold: 90
+                                    segmentCount: 32
+                                    unit: "PSI"
+                                    precision: 1
+                                    displayMode: CircularBargraph.DisplayMode.Dot
+                                    peakHoldEnabled: true
+                                }
+
+                                Text {
+                                    text: "Value: " + dotBargraph.value.toFixed(1) + " PSI • Peak: " + dotBargraph.peakValue.toFixed(1) + " PSI"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 3: 180° Semicircular Tachometer Arc
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "180° Semicircular Gauge Arc"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Top-half 180° sweep (-90° to +90°) with 18 segments"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                CircularBargraph {
+                                    id: semiBargraph
+                                    width: 200
+                                    height: 200
+                                    Layout.alignment: Qt.AlignCenter
+                                    startAngle: -90.0
+                                    spanAngle: 180.0
+                                    segmentCount: 18
+                                    minimum: 0.0
+                                    maximum: 10.0
+                                    warningThreshold: 7.0
+                                    errorThreshold: 8.5
+                                    unit: "BAR"
+                                    precision: 1
+                                    value: (pressureGauge.value / 100.0) * 10.0
+                                    peakHoldEnabled: true
+                                }
+
+                                Text {
+                                    text: "Pressure: " + semiBargraph.value.toFixed(1) + " BAR"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 4: Out-of-Range & Fault Diagnostics
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Fault & Out-of-Range States"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Blinking end segments (~2 Hz), ▲ / ▼ and --- marks"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                CircularBargraph {
+                                    id: faultBargraph
+                                    width: 200
+                                    height: 200
+                                    Layout.alignment: Qt.AlignCenter
+                                    minimum: 0
+                                    maximum: 100
+                                    warningThreshold: 70
+                                    errorThreshold: 85
+                                    segmentCount: 20
+                                    unit: "kW"
+                                    value: 50
+                                }
+
+                                GridLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    columns: 2
+                                    rowSpacing: 6
+                                    columnSpacing: 8
+
+                                    Button {
+                                        text: "Valid (50)"
+                                        onClicked: faultBargraph.setValue(50)
+                                    }
+                                    Button {
+                                        text: "Overrange (115 ▲)"
+                                        onClicked: faultBargraph.setValue(115)
+                                    }
+                                    Button {
+                                        text: "Underrange (-15 ▼)"
+                                        onClicked: faultBargraph.setValue(-15)
+                                    }
+                                    Button {
+                                        text: "Invalid (NaN ---)"
+                                        onClicked: faultBargraph.setValue(NaN)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Interactive Configurator Card
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 220
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            spacing: 32
+
+                            // Preview Bargraph
+                            CircularBargraph {
+                                id: configBargraph
+                                width: 180
+                                height: 180
+                                minimum: 0
+                                maximum: 100
+                                warningThreshold: 70
+                                errorThreshold: 85
+                                segmentCount: Math.round(cbConfigSegSlider.value)
+                                displayMode: cbConfigModeCombo.currentIndex === 0 ? CircularBargraph.DisplayMode.Bar : CircularBargraph.DisplayMode.Dot
+                                startAngle: cbConfigSpanCombo.currentIndex === 0 ? -135 : cbConfigSpanCombo.currentIndex === 1 ? -90 : 0
+                                spanAngle: cbConfigSpanCombo.currentIndex === 0 ? 270 : cbConfigSpanCombo.currentIndex === 1 ? 180 : 360
+                                peakHoldEnabled: cbConfigPeakCheck.checked
+                                digitalDisplayVisible: cbConfigPodCheck.checked
+                                value: cbConfigValSlider.value
+                                unit: "%"
+                            }
+
+                            // Controls Grid
+                            GridLayout {
+                                Layout.fillWidth: true
+                                columns: 3
+                                rowSpacing: 10
+                                columnSpacing: 24
+
+                                CheckBox {
+                                    id: cbConfigPeakCheck
+                                    text: "Peak Hold"
+                                    checked: true
+                                }
+
+                                CheckBox {
+                                    id: cbConfigPodCheck
+                                    text: "Digital LCD Pod"
+                                    checked: true
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Display Mode:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: cbConfigModeCombo
+                                        model: ["Progressive Bar", "Single Dot Cursor"]
+                                    }
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Arc Sweep:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: cbConfigSpanCombo
+                                        model: ["270° Standard", "180° Semicircle", "360° Full Circle"]
+                                    }
+                                }
+
+                                RowLayout {
+                                    spacing: 8
+                                    Text { text: "Segments: " + Math.round(cbConfigSegSlider.value); color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: cbConfigSegSlider
+                                        from: 12
+                                        to: 48
+                                        value: 24
+                                        stepSize: 4
+                                    }
+                                }
+
+                                RowLayout {
+                                    Layout.columnSpan: 3
+                                    spacing: 12
+                                    Text { text: "Interactive Value: " + cbConfigValSlider.value.toFixed(1) + " %"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: cbConfigValSlider
+                                        Layout.fillWidth: true
+                                        from: 0
+                                        to: 100
+                                        value: 45
                                     }
                                 }
                             }
