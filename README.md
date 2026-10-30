@@ -126,6 +126,18 @@ Item {
             unit: "%"
         }
 
+        CircularBargraph {
+            width: 180
+            height: 180
+            value: 68.5
+            minimum: 0
+            maximum: 100
+            unit: "%"
+            warningThreshold: 70
+            errorThreshold: 85
+            peakHoldEnabled: true
+        }
+
         SevenSegmentDisplay {
             width: 220
             height: 70
