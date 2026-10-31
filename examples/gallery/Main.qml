@@ -50,6 +50,9 @@ ApplicationWindow {
             if (typeof dotBargraph !== "undefined" && dotBargraph) {
                 dotBargraph.setValue(60 + Math.cos(appWindow.simTime * 0.9) * 35)
             }
+            if (typeof liveHeadingCompass !== "undefined" && liveHeadingCompass) {
+                liveHeadingCompass.heading = (45 + Math.sin(appWindow.simTime * 0.4) * 35 + 360) % 360
+            }
         }
     }
 
@@ -184,6 +187,10 @@ ApplicationWindow {
             }
             TabButton {
                 text: "⭕  Circular Bargraphs"
+                width: implicitWidth + 24
+            }
+            TabButton {
+                text: "🧭  Compasses"
                 width: implicitWidth + 24
             }
         }
@@ -2199,6 +2206,376 @@ ApplicationWindow {
                                         from: 0
                                         to: 100
                                         value: 45
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 9: Compasses (Marine / Aeronautical Heading Indicators)
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                ColumnLayout {
+                    width: parent.width
+                    spacing: 16
+
+                    // Showcase Grid: 4 Cards
+                    GridLayout {
+                        Layout.fillWidth: true
+                        columns: appWindow.width > 1050 ? 4 : (appWindow.width > 680 ? 2 : 1)
+                        rowSpacing: 16
+                        columnSpacing: 16
+
+                        // Panel 1: Heading-Up Marine/Aero Compass Card
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Heading-Up Compass Card"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Rotating card with fixed 12 o'clock lubber line"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Compass {
+                                    id: liveHeadingCompass
+                                    width: 220
+                                    height: 220
+                                    Layout.alignment: Qt.AlignCenter
+                                    displayMode: Compass.DisplayMode.HeadingUp
+                                    heading: 45.0
+                                    targetHeading: 90.0
+                                    headingBugVisible: true
+                                    lubberLineVisible: true
+                                    digitalReadoutVisible: true
+                                }
+
+                                Text {
+                                    text: "Simulated Heading: " + String(Math.round(liveHeadingCompass.heading)).padStart(3, '0') + "°"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 2: North-Up Compass Rose with Rotating Needle
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "North-Up Compass Rose"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Fixed rose with 3D faceted magnetic needle"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Compass {
+                                    id: northUpCompass
+                                    width: 220
+                                    height: 220
+                                    Layout.alignment: Qt.AlignCenter
+                                    displayMode: Compass.DisplayMode.NorthUp
+                                    heading: (315 + Math.sin(appWindow.simTime * 0.3) * 60 + 360) % 360
+                                    targetHeading: 0.0
+                                    headingBugVisible: true
+                                    lubberLineVisible: true
+                                    digitalReadoutVisible: true
+                                }
+
+                                Text {
+                                    text: "Magnetic Heading: " + String(Math.round(northUpCompass.heading)).padStart(3, '0') + "°"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 3: Autopilot Course Tracking & Deviation
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Autopilot Course & Bug"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "Drag orange chevron or scroll wheel to set course"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Compass {
+                                    id: autopilotCompass
+                                    width: 220
+                                    height: 220
+                                    Layout.alignment: Qt.AlignCenter
+                                    displayMode: Compass.DisplayMode.HeadingUp
+                                    heading: 285.0
+                                    targetHeading: 310.0
+                                    headingBugVisible: true
+                                    headingBugInteractive: true
+                                    lubberLineVisible: true
+                                    digitalReadoutVisible: true
+                                }
+
+                                Text {
+                                    text: {
+                                        var dev = autopilotCompass.courseDeviation
+                                        var sideStr = dev >= 0 ? "Starboard (+" : "Port ("
+                                        return "Target: " + String(Math.round(autopilotCompass.targetHeading)).padStart(3, '0') + "°  |  Dev: " + sideStr + dev.toFixed(1) + "°)"
+                                    }
+                                    font.pixelSize: 11
+                                    font.bold: true
+                                    color: Math.abs(autopilotCompass.courseDeviation) < 5 ? "#26de81" : "#fe8228"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                            }
+                        }
+
+                        // Panel 4: Failure Mode & Sensor Dropout (HDG Flag)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 380
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Fault & Sensor Dropout"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+                                Text {
+                                    text: "NaN invalid heading triggers HDG flag and dimming"
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                    Layout.alignment: Qt.AlignHCenter
+                                }
+
+                                Compass {
+                                    id: faultCompass
+                                    width: 220
+                                    height: 220
+                                    Layout.alignment: Qt.AlignCenter
+                                    displayMode: faultModeCombo.currentIndex === 0 ? Compass.DisplayMode.HeadingUp : Compass.DisplayMode.NorthUp
+                                    heading: faultDropoutSwitch.checked ? NaN : 135.0
+                                    targetHeading: 150.0
+                                    headingBugVisible: true
+                                    lubberLineVisible: true
+                                    digitalReadoutVisible: true
+                                }
+
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignHCenter
+                                    spacing: 12
+
+                                    Button {
+                                        id: faultDropoutSwitch
+                                        checkable: true
+                                        checked: true
+                                        text: checked ? "Sensor Dropout (NaN)" : "Normal Signal (135°)"
+                                    }
+
+                                    ComboBox {
+                                        id: faultModeCombo
+                                        model: ["Heading-Up", "North-Up"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Bottom Panel: Interactive Configurator
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 250
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 20
+                            spacing: 16
+
+                            Text {
+                                text: "Interactive Compass Configurator"
+                                font.pixelSize: 15
+                                font.bold: true
+                                color: "#f5f6fa"
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 24
+
+                                // Interactive Compass Preview
+                                Compass {
+                                    id: previewCompass
+                                    width: 190
+                                    height: 190
+                                    Layout.preferredWidth: 190
+                                    Layout.preferredHeight: 190
+                                    displayMode: cmpConfigModeCombo.currentIndex === 0 ? Compass.DisplayMode.HeadingUp : Compass.DisplayMode.NorthUp
+                                    heading: cmpConfigHdgSlider.value
+                                    targetHeading: cmpConfigBugSlider.value
+                                    headingBugVisible: cmpConfigBugCheck.checked
+                                    headingBugInteractive: cmpConfigDragCheck.checked
+                                    lubberLineVisible: cmpConfigLubberCheck.checked
+                                    digitalReadoutVisible: cmpConfigPodCheck.checked
+                                    animated: cmpConfigAnimCheck.checked
+                                }
+
+                                // Controls Grid
+                                GridLayout {
+                                    Layout.fillWidth: true
+                                    columns: 3
+                                    rowSpacing: 10
+                                    columnSpacing: 16
+
+                                    CheckBox {
+                                        id: cmpConfigBugCheck
+                                        text: "Heading Bug Visible"
+                                        checked: true
+                                    }
+
+                                    CheckBox {
+                                        id: cmpConfigDragCheck
+                                        text: "Bug Interactive Drag"
+                                        checked: true
+                                    }
+
+                                    CheckBox {
+                                        id: cmpConfigLubberCheck
+                                        text: "Lubber Line Visible"
+                                        checked: true
+                                    }
+
+                                    CheckBox {
+                                        id: cmpConfigPodCheck
+                                        text: "Digital LCD Readout"
+                                        checked: true
+                                    }
+
+                                    CheckBox {
+                                        id: cmpConfigAnimCheck
+                                        text: "Smooth Damped Animation"
+                                        checked: true
+                                    }
+
+                                    RowLayout {
+                                        spacing: 8
+                                        Text { text: "Display Mode:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                        ComboBox {
+                                            id: cmpConfigModeCombo
+                                            model: ["Heading-Up (Aircraft / Marine)", "North-Up (Magnetic Rose)"]
+                                        }
+                                    }
+
+                                    RowLayout {
+                                        Layout.columnSpan: 3
+                                        spacing: 12
+                                        Text {
+                                            text: "Heading Angle: " + String(Math.round(cmpConfigHdgSlider.value)).padStart(3, '0') + "°"
+                                            color: "#8a95a5"
+                                            font.pixelSize: 12
+                                            Layout.preferredWidth: 130
+                                        }
+                                        Slider {
+                                            id: cmpConfigHdgSlider
+                                            Layout.fillWidth: true
+                                            from: 0
+                                            to: 359
+                                            value: 45
+                                            stepSize: 1
+                                        }
+                                    }
+
+                                    RowLayout {
+                                        Layout.columnSpan: 3
+                                        spacing: 12
+                                        Text {
+                                            text: "Course Bug: " + String(Math.round(cmpConfigBugSlider.value)).padStart(3, '0') + "°"
+                                            color: "#8a95a5"
+                                            font.pixelSize: 12
+                                            Layout.preferredWidth: 130
+                                        }
+                                        Slider {
+                                            id: cmpConfigBugSlider
+                                            Layout.fillWidth: true
+                                            from: 0
+                                            to: 359
+                                            value: 120
+                                            stepSize: 1
+                                            onMoved: {
+                                                previewCompass.setTargetHeading(value)
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -51,6 +51,7 @@ While the original `QtIndustrialWidgets` excels in traditional desktop `QtWidget
 |---|---|
 | **`RadialGauge`**<br>0–8000 RPM dial, faceted vector needle in warning zone, digital LCD pod, threshold bands | <img src="docs/images/radial-gauge-warning.png" alt="RadialGauge" width="300"> |
 | **`CircularBargraph`**<br>24 curved LED segments, Bar/Dot modes, dynamic color zones, peak hold, LCD readout pod | <img src="docs/images/circular-bargraph-valid.png" alt="CircularBargraph" width="220"> |
+| **`Compass`**<br>Dual Heading-Up / North-Up modes, adjustable target heading bug, 360° card graduations, lubber line, digital pod, HDG failure flag | <img src="docs/images/compass-heading-up.png" alt="Compass" width="220"> |
 | **`LinearGauge`**<br>Thermometer mode, 0–120 °C with bulb capillary, dynamic liquid color shift and specular glare | <img src="docs/images/linear-gauge-thermometer.png" alt="LinearGauge" width="120"> |
 | **`SevenSegmentDisplay`**<br>Six digits, one decimal, italic skewed segments, unlit ghost segments and color presets | <img src="docs/images/seven-segment-display-value.png" alt="SevenSegmentDisplay" width="300"> |
 | **`LevelMeter`**<br>Multi-channel stereo dB/VU meter, floating peak hold, segmented LED ladder and continuous gradient modes | <img src="docs/images/level-meter-stereo-db.png" alt="LevelMeter" width="130"> |
@@ -62,11 +63,10 @@ While the original `QtIndustrialWidgets` excels in traditional desktop `QtWidget
 
 ## 🗺️ Roadmap & Remaining Widgets
 
-The remaining 4 industrial widgets from the original C++ suite are tracked in the [Project Roadmap](https://github.com/users/paolosereno/projects/4):
+The remaining 3 industrial widgets from the original C++ suite are tracked in the [Project Roadmap](https://github.com/users/paolosereno/projects/4):
 
 | Category | Component | Description | Tracking Issue |
 | :--- | :--- | :--- | :---: |
-| **Gauges & Dials** | `Compass` | Heading indicator card with heading bug alignment and bearing scale | [Issue #5](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/5) |
 | **Alarms & Charts** | `AnnunciatorPanel` | ISA-18.1 compliant alarm annunciator tiles (unack, ack, ringback) | [Issue #7](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/7) |
 | | `StripChart` | High-frequency rolling telemetry stream plotting (60 FPS) | [Issue #8](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/8) |
 | | `AnalysisChart` | Historical data review chart with zoom/pan capabilities and dual cursors | [Issue #9](https://github.com/paolosereno/QtQuickIndustrialWidget/issues/9) |
@@ -136,6 +136,15 @@ Item {
             warningThreshold: 70
             errorThreshold: 85
             peakHoldEnabled: true
+        }
+
+        Compass {
+            width: 220
+            height: 220
+            displayMode: Compass.DisplayMode.HeadingUp
+            heading: 45.0
+            targetHeading: 90.0
+            headingBugVisible: true
         }
 
         SevenSegmentDisplay {
