@@ -193,6 +193,10 @@ ApplicationWindow {
                 text: "🧭  Compasses"
                 width: implicitWidth + 24
             }
+            TabButton {
+                text: "🚨  Annunciator Panels"
+                width: implicitWidth + 24
+            }
         }
 
         // ====================================================================
@@ -2574,6 +2578,545 @@ ApplicationWindow {
                                             stepSize: 1
                                             onMoved: {
                                                 previewCompass.setTargetHeading(value)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------------------------
+            // TAB 10: Annunciator Panels (ISA-18.1 Alarm Annunciator Matrix)
+            // ----------------------------------------------------------------
+            ScrollView {
+                clip: true
+                contentWidth: availableWidth
+
+                ColumnLayout {
+                    width: parent.width
+                    spacing: 16
+
+                    // Showcase 1: Power Station Turbogenerator Annunciator (2x4) + Operator Pushbuttons
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 460
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 12
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 12
+
+                                ColumnLayout {
+                                    spacing: 2
+                                    Text {
+                                        text: "Turbogenerator Unit 1 — Main Alarm Annunciator"
+                                        font.pixelSize: 16
+                                        font.bold: true
+                                        color: "#f5f6fa"
+                                    }
+                                    Text {
+                                        text: "ISA-18.1 Sequence A (Automatic Reset) • Click tiles to ACK individually or use operator pushbuttons"
+                                        font.pixelSize: 12
+                                        color: "#8a95a5"
+                                    }
+                                }
+
+                                Item { Layout.fillWidth: true }
+
+                                // Horn Alarm Status Indicator Badge
+                                Rectangle {
+                                    Layout.preferredHeight: 28
+                                    Layout.preferredWidth: 140
+                                    radius: 4
+                                    color: mainAnnunciator.audibleHornActive ? "#eb3b5a" : "#222a36"
+                                    border.color: mainAnnunciator.audibleHornActive ? "#ff6b81" : "#303948"
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: mainAnnunciator.audibleHornActive ? "🔊 HORN SOUNDING" : "🔇 HORN SILENT"
+                                        font.bold: true
+                                        font.pixelSize: 11
+                                        color: mainAnnunciator.audibleHornActive ? "#ffffff" : "#8a95a5"
+                                    }
+                                }
+
+                                // Unacknowledged Alarms Count Badge
+                                Rectangle {
+                                    Layout.preferredHeight: 28
+                                    Layout.preferredWidth: 100
+                                    radius: 4
+                                    color: mainAnnunciator.unacknowledgedCount > 0 ? "#fed330" : "#222a36"
+                                    border.color: mainAnnunciator.unacknowledgedCount > 0 ? "#ffeaa7" : "#303948"
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "UNACK: " + mainAnnunciator.unacknowledgedCount
+                                        font.bold: true
+                                        font.pixelSize: 11
+                                        color: mainAnnunciator.unacknowledgedCount > 0 ? "#1e242e" : "#8a95a5"
+                                    }
+                                }
+
+                                // Active Alarms Count Badge
+                                Rectangle {
+                                    Layout.preferredHeight: 28
+                                    Layout.preferredWidth: 90
+                                    radius: 4
+                                    color: mainAnnunciator.activeAlarmsCount > 0 ? "#374150" : "#222a36"
+                                    border.color: "#465265"
+                                    border.width: 1
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "ACTIVE: " + mainAnnunciator.activeAlarmsCount
+                                        font.bold: true
+                                        font.pixelSize: 11
+                                        color: mainAnnunciator.activeAlarmsCount > 0 ? "#f5f6fa" : "#8a95a5"
+                                    }
+                                }
+                            }
+
+                            // The Main Annunciator Matrix
+                            AnnunciatorPanel {
+                                id: mainAnnunciator
+                                Layout.fillWidth: true
+                                Layout.preferredHeight: 220
+                                rows: 2
+                                columns: 4
+                                sequence: AnnunciatorPanel.AnnunciatorSequence.SequenceA_AutomaticReset
+
+                                Component.onCompleted: {
+                                    setTileText(0, "TURBINE 1\nBEARING TRIP")
+                                    setTileSeverity(0, AnnunciatorPanel.Severity.Critical)
+
+                                    setTileText(1, "MAIN STEAM\nPRESS LOW")
+                                    setTileSeverity(1, AnnunciatorPanel.Severity.Warning)
+
+                                    setTileText(2, "FEEDWATER PUMP\nOVERLOAD")
+                                    setTileSeverity(2, AnnunciatorPanel.Severity.Warning)
+
+                                    setTileText(3, "GENERATOR\nEXCITATION TRIP")
+                                    setTileSeverity(3, AnnunciatorPanel.Severity.Critical)
+
+                                    setTileText(4, "CONDENSER\nVACUUM LOW")
+                                    setTileSeverity(4, AnnunciatorPanel.Severity.Warning)
+
+                                    setTileText(5, "EMERGENCY DIESEL\nAUTO-START")
+                                    setTileSeverity(5, AnnunciatorPanel.Severity.Advisory)
+
+                                    setTileText(6, "LUBE OIL\nPRESS LOW")
+                                    setTileSeverity(6, AnnunciatorPanel.Severity.Critical)
+
+                                    setTileText(7, "COOLING TOWER\nFLOW ADVISORY")
+                                    setTileSeverity(7, AnnunciatorPanel.Severity.Advisory)
+
+                                    // Pre-trip an alarm for immediate visual feedback
+                                    triggerAlarm(0)
+                                }
+                            }
+
+                            // Standard Industrial Operator Pushbutton Station (ACK, SILENCE, RESET, TEST)
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 12
+
+                                Button {
+                                    text: "🔔  ACKNOWLEDGE (ACK)"
+                                    Layout.preferredHeight: 36
+                                    onClicked: mainAnnunciator.acknowledgeAll()
+                                }
+
+                                Button {
+                                    text: "🔇  SILENCE HORN"
+                                    Layout.preferredHeight: 36
+                                    onClicked: mainAnnunciator.silence()
+                                }
+
+                                Button {
+                                    text: "🔄  RESET"
+                                    Layout.preferredHeight: 36
+                                    onClicked: mainAnnunciator.resetAll()
+                                }
+
+                                Button {
+                                    id: mainLampTestBtn
+                                    text: "💡  LAMP TEST"
+                                    Layout.preferredHeight: 36
+                                    checkable: true
+                                    checked: mainAnnunciator.lampTestActive
+                                    onToggled: mainAnnunciator.setLampTest(checked)
+                                }
+
+                                Item { Layout.fillWidth: true }
+
+                                Text {
+                                    text: "Contact Trip Simulators:"
+                                    font.bold: true
+                                    font.pixelSize: 12
+                                    color: "#8a95a5"
+                                }
+
+                                Button {
+                                    text: "⚡ Trip Bearings"
+                                    Layout.preferredHeight: 36
+                                    onClicked: {
+                                        if (mainAnnunciator.isAlarmActive(0)) {
+                                            mainAnnunciator.clearAlarm(0)
+                                        } else {
+                                            mainAnnunciator.triggerAlarm(0)
+                                        }
+                                    }
+                                }
+
+                                Button {
+                                    text: "⚠️ Trip Steam"
+                                    Layout.preferredHeight: 36
+                                    onClicked: {
+                                        if (mainAnnunciator.isAlarmActive(1)) {
+                                            mainAnnunciator.clearAlarm(1)
+                                        } else {
+                                            mainAnnunciator.triggerAlarm(1)
+                                        }
+                                    }
+                                }
+
+                                Button {
+                                    text: "⚡ Trip Generator"
+                                    Layout.preferredHeight: 36
+                                    onClicked: {
+                                        if (mainAnnunciator.isAlarmActive(3)) {
+                                            mainAnnunciator.clearAlarm(3)
+                                        } else {
+                                            mainAnnunciator.triggerAlarm(3)
+                                        }
+                                    }
+                                }
+
+                                Button {
+                                    text: "🧹 Clear All Contacts"
+                                    Layout.preferredHeight: 36
+                                    onClicked: {
+                                        for (let i = 0; i < 8; ++i) {
+                                            mainAnnunciator.clearAlarm(i)
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Individual Contact Checkboxes for all 8 tiles
+                            GridLayout {
+                                Layout.fillWidth: true
+                                columns: 4
+                                rowSpacing: 4
+                                columnSpacing: 12
+
+                                CheckBox {
+                                    text: "1. Turbine Bearing Trip"
+                                    checked: mainAnnunciator.isAlarmActive(0)
+                                    onToggled: mainAnnunciator.setAlarmActive(0, checked)
+                                }
+                                CheckBox {
+                                    text: "2. Main Steam Press Low"
+                                    checked: mainAnnunciator.isAlarmActive(1)
+                                    onToggled: mainAnnunciator.setAlarmActive(1, checked)
+                                }
+                                CheckBox {
+                                    text: "3. Feedwater Pump Overload"
+                                    checked: mainAnnunciator.isAlarmActive(2)
+                                    onToggled: mainAnnunciator.setAlarmActive(2, checked)
+                                }
+                                CheckBox {
+                                    text: "4. Generator Excitation Trip"
+                                    checked: mainAnnunciator.isAlarmActive(3)
+                                    onToggled: mainAnnunciator.setAlarmActive(3, checked)
+                                }
+                                CheckBox {
+                                    text: "5. Condenser Vacuum Low"
+                                    checked: mainAnnunciator.isAlarmActive(4)
+                                    onToggled: mainAnnunciator.setAlarmActive(4, checked)
+                                }
+                                CheckBox {
+                                    text: "6. Diesel Auto-Start"
+                                    checked: mainAnnunciator.isAlarmActive(5)
+                                    onToggled: mainAnnunciator.setAlarmActive(5, checked)
+                                }
+                                CheckBox {
+                                    text: "7. Lube Oil Press Low"
+                                    checked: mainAnnunciator.isAlarmActive(6)
+                                    onToggled: mainAnnunciator.setAlarmActive(6, checked)
+                                }
+                                CheckBox {
+                                    text: "8. Cooling Tower Flow"
+                                    checked: mainAnnunciator.isAlarmActive(7)
+                                    onToggled: mainAnnunciator.setAlarmActive(7, checked)
+                                }
+                            }
+                        }
+                    }
+
+                    // Showcase 2: Comparison Grid (Sequence A vs Sequence M)
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 16
+
+                        // Panel Left: Sequence A (Automatic Reset)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 340
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Sequence A — Automatic Reset"
+                                    font.pixelSize: 15
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                }
+                                Text {
+                                    text: "Acknowledged alarms automatically clear to Normal when contact opens."
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                }
+
+                                AnnunciatorPanel {
+                                    id: seqAPanel
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 160
+                                    rows: 2
+                                    columns: 2
+                                    sequence: AnnunciatorPanel.AnnunciatorSequence.SequenceA_AutomaticReset
+
+                                    Component.onCompleted: {
+                                        setTileText(0, "HEADER A\nTEMP HIGH")
+                                        setTileSeverity(0, AnnunciatorPanel.Severity.Critical)
+                                        setTileText(1, "VALVE 101\nFAIL CLOSE")
+                                        setTileSeverity(1, AnnunciatorPanel.Severity.Warning)
+                                        setTileText(2, "TANK LVL\nHI-HI TRIP")
+                                        setTileSeverity(2, AnnunciatorPanel.Severity.Critical)
+                                        setTileText(3, "AUX FAN 2\nRUNNING")
+                                        setTileSeverity(3, AnnunciatorPanel.Severity.Advisory)
+
+                                        triggerAlarm(0)
+                                    }
+                                }
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 8
+
+                                    Button {
+                                        text: "Trip / Clear #1"
+                                        onClicked: {
+                                            if (seqAPanel.isAlarmActive(0)) seqAPanel.clearAlarm(0)
+                                            else seqAPanel.triggerAlarm(0)
+                                        }
+                                    }
+                                    Button {
+                                        text: "Acknowledge"
+                                        onClicked: seqAPanel.acknowledgeAll()
+                                    }
+                                    Item { Layout.fillWidth: true }
+                                    Text {
+                                        text: "State: " + (seqAPanel.tileState(0) === 0 ? "Normal" : (seqAPanel.tileState(0) === 1 ? "Unack" : (seqAPanel.tileState(0) === 2 ? "Ack'd" : "Ringback")))
+                                        font.bold: true
+                                        color: "#8a95a5"
+                                        font.pixelSize: 11
+                                    }
+                                }
+                            }
+                        }
+
+                        // Panel Right: Sequence M (Manual Reset with Ringback)
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 340
+                            color: "#161b24"
+                            radius: 8
+                            border.color: "#273142"
+                            border.width: 1
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 16
+                                spacing: 10
+
+                                Text {
+                                    text: "Sequence M — Manual Reset (Ringback)"
+                                    font.pixelSize: 15
+                                    font.bold: true
+                                    color: "#f5f6fa"
+                                }
+                                Text {
+                                    text: "Clearing after ACK enters Ringback (slow flash) until operator hits RESET."
+                                    font.pixelSize: 11
+                                    color: "#8a95a5"
+                                }
+
+                                AnnunciatorPanel {
+                                    id: seqMPanel
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 160
+                                    rows: 2
+                                    columns: 2
+                                    sequence: AnnunciatorPanel.AnnunciatorSequence.SequenceM_ManualReset
+
+                                    Component.onCompleted: {
+                                        setTileText(0, "REACTOR B\nPRESSURE HIGH")
+                                        setTileSeverity(0, AnnunciatorPanel.Severity.Critical)
+                                        setTileText(1, "FEED LINE\nFLOW LOW")
+                                        setTileSeverity(1, AnnunciatorPanel.Severity.Warning)
+                                        setTileText(2, "ISOLATION\nVALVE TRIP")
+                                        setTileSeverity(2, AnnunciatorPanel.Severity.Critical)
+                                        setTileText(3, "PUMP SEAL\nLEAK DETECT")
+                                        setTileSeverity(3, AnnunciatorPanel.Severity.Advisory)
+
+                                        triggerAlarm(0)
+                                        acknowledge(0)
+                                        clearAlarm(0) // Enters Ringback!
+                                    }
+                                }
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: 8
+
+                                    Button {
+                                        text: "Trip #1"
+                                        onClicked: seqMPanel.triggerAlarm(0)
+                                    }
+                                    Button {
+                                        text: "Clear #1"
+                                        onClicked: seqMPanel.clearAlarm(0)
+                                    }
+                                    Button {
+                                        text: "Acknowledge"
+                                        onClicked: seqMPanel.acknowledge(0)
+                                    }
+                                    Button {
+                                        text: "Reset"
+                                        onClicked: seqMPanel.reset(0)
+                                    }
+                                    Item { Layout.fillWidth: true }
+                                    Text {
+                                        text: "State: " + (seqMPanel.tileState(0) === 0 ? "Normal" : (seqMPanel.tileState(0) === 1 ? "Unack" : (seqMPanel.tileState(0) === 2 ? "Ack'd" : "Ringback")))
+                                        font.bold: true
+                                        color: seqMPanel.tileState(0) === 3 ? "#fed330" : "#8a95a5"
+                                        font.pixelSize: 11
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Showcase 3: Matrix Configurator & Visual Resizer
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 280
+                        color: "#161b24"
+                        radius: 8
+                        border.color: "#273142"
+                        border.width: 1
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 14
+
+                            Text {
+                                text: "Annunciator Matrix Grid Configurator"
+                                font.pixelSize: 15
+                                font.bold: true
+                                color: "#f5f6fa"
+                            }
+
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 20
+
+                                AnnunciatorPanel {
+                                    id: cfgPanel
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 180
+                                    rows: Math.round(cfgRowSlider.value)
+                                    columns: Math.round(cfgColSlider.value)
+                                    sequence: cfgSeqCombo.currentIndex === 0 ? AnnunciatorPanel.AnnunciatorSequence.SequenceA_AutomaticReset : AnnunciatorPanel.AnnunciatorSequence.SequenceM_ManualReset
+                                    lampTestActive: cfgLampTestCheck.checked
+                                }
+
+                                GridLayout {
+                                    Layout.preferredWidth: 320
+                                    columns: 2
+                                    rowSpacing: 10
+                                    columnSpacing: 12
+
+                                    Text { text: "Rows: " + Math.round(cfgRowSlider.value); color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: cfgRowSlider
+                                        from: 1
+                                        to: 4
+                                        value: 2
+                                        stepSize: 1
+                                    }
+
+                                    Text { text: "Columns: " + Math.round(cfgColSlider.value); color: "#8a95a5"; font.pixelSize: 12 }
+                                    Slider {
+                                        id: cfgColSlider
+                                        from: 2
+                                        to: 6
+                                        value: 3
+                                        stepSize: 1
+                                    }
+
+                                    Text { text: "Sequence:"; color: "#8a95a5"; font.pixelSize: 12 }
+                                    ComboBox {
+                                        id: cfgSeqCombo
+                                        model: ["Sequence A (Auto-Reset)", "Sequence M (Manual-Reset)"]
+                                    }
+
+                                    CheckBox {
+                                        id: cfgLampTestCheck
+                                        Layout.columnSpan: 2
+                                        text: "Lamp Test (All Windows Lit)"
+                                        checked: false
+                                    }
+
+                                    RowLayout {
+                                        Layout.columnSpan: 2
+                                        spacing: 8
+                                        Button {
+                                            text: "Trip Tile 0"
+                                            onClicked: cfgPanel.triggerAlarm(0)
+                                        }
+                                        Button {
+                                            text: "Acknowledge"
+                                            onClicked: cfgPanel.acknowledgeAll()
+                                        }
+                                        Button {
+                                            text: "Clear All"
+                                            onClicked: {
+                                                for (let i = 0; i < cfgPanel.tileCount; ++i) {
+                                                    cfgPanel.clearAlarm(i)
+                                                }
                                             }
                                         }
                                     }

@@ -17,6 +17,7 @@ qt_add_qml_module(QtQuickIndustrialWidgets
         QtQuickIndustrialWidgets/LevelMeter.qml
         QtQuickIndustrialWidgets/CircularBargraph.qml
         QtQuickIndustrialWidgets/Compass.qml
+        QtQuickIndustrialWidgets/AnnunciatorPanel.qml
         QtQuickIndustrialWidgets/NumberFormat.js
 )
 
